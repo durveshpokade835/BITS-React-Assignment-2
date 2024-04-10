@@ -21,8 +21,12 @@ export default function TableComponent() {
     function handleSubmit(event) {
         event.preventDefault();
         axios.post('https://jsonplaceholder.typicode.com/posts', inputData).then(res => {
-            setRecords([...records, res.data]);
-            setInputData({ id: "", title: "", body: "" });
+            setRecords([res.data, ...records]);
+            setInputData({
+                id: '',
+                title: '',
+                body: ''
+            });
             alert("Data Added succefully");
         })
     }
@@ -31,19 +35,23 @@ export default function TableComponent() {
             <Form onSubmit={handleSubmit}>
                 <Row>
                     <Col>
-                        <Form.Control htmlFor="id" placeholder="id" onChange={(event) => {
-                            setInputData({ ...inputData, id: event.target.value })
-                        }} />
+                        <Form.Control htmlFor="id" value={inputData.id}
+                            placeholder="id" onChange={(event) => {
+                                setInputData({ ...inputData, id: event.target.value })
+                            }} />
                     </Col>
                     <Col>
-                        <Form.Control htmlFor='title' placeholder="title" onChange={(event) => {
-                            setInputData({ ...inputData, title: event.target.value })
-                        }} />
+                        <Form.Control htmlFor='title'
+                            value={inputData.title} placeholder="title" onChange={(event) => {
+                                setInputData({ ...inputData, title: event.target.value })
+                            }} />
                     </Col>
                     <Col>
-                        <Form.Control htmlFor="body" placeholder="body" onChange={(event) => {
-                            setInputData({ ...inputData, body: event.target.value })
-                        }} />
+                        <Form.Control htmlFor="body"
+                            value={inputData.body}
+                            placeholder="body" onChange={(event) => {
+                                setInputData({ ...inputData, body: event.target.value })
+                            }} />
                     </Col>
                 </Row>
                 <Button variant="dark" type='submit'>submit</Button>
