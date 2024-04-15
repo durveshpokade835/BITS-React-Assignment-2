@@ -11,9 +11,10 @@ export default function TableComponent() {
         body: ''
     });
 
-    function handleSubmit(event) {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        axios.post('https://jsonplaceholder.typicode.com/posts', inputData).then(res => {
+        try {
+            const res = await axios.post('https://jsonplaceholder.typicode.com/posts', inputData);
             setRecords([...records, res.data]);
             setInputData({
                 id: '',
@@ -21,27 +22,36 @@ export default function TableComponent() {
                 body: ''
             });
             alert("Data Added successfully");
-        });
+        } catch (error) {
+            console.error("Error adding data:", error);
+        }
     }
 
-    function handleDelete(deleteID) {
-        axios.delete(`https://jsonplaceholder.typicode.com/posts/${deleteID}`).then(() => {
+    const handleDelete = async (deleteID) => {
+        try {
+            await axios.delete(`https://jsonplaceholder.typicode.com/posts/${deleteID}`);
             const updatedRecords = records.filter(record => record.id !== deleteID);
             setRecords(updatedRecords);
             alert("Data Deleted successfully");
-        });
+        } catch (error) {
+            console.error("Error deleting data:", error);
+        }
     }
 
-    function handleEdit(eId) {
-        axios.get(`https://jsonplaceholder.typicode.com/posts/${eId}`).then(res => {
+    const handleEdit = async (eId) => {
+        try {
+            const res = await axios.get(`https://jsonplaceholder.typicode.com/posts/${eId}`);
             setInputData(res.data);
             setEditID(res.data.id);
-        });
+        } catch (error) {
+            console.error("Error fetching data for edit:", error);
+        }
     }
 
-    function handleUpdate(event) {
+    const handleUpdate = async (event) => {
         event.preventDefault();
-        axios.put(`https://jsonplaceholder.typicode.com/posts/${editID}`, inputData).then(res => {
+        try {
+            const res = await axios.put(`https://jsonplaceholder.typicode.com/posts/${editID}`, inputData);
             const updatedRecords = records.map(record =>
                 record.id === editID ? res.data : record
             );
@@ -53,13 +63,21 @@ export default function TableComponent() {
             });
             setEditID(null);
             alert("Data Updated successfully");
-        });
+        } catch (error) {
+            console.error("Error updating data:", error);
+        }
     }
 
     useEffect(() => {
-        axios.get('https://jsonplaceholder.typicode.com/posts').then(res => {
-            setRecords(res.data);
-        });
+        const fetchData = async () => {
+            try {
+                const res = await axios.get('https://jsonplaceholder.typicode.com/posts');
+                setRecords(res.data);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+        fetchData();
     }, []);
 
     return (
